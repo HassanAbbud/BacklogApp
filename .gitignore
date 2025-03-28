@@ -25,3 +25,4 @@ dist-ssr
 
 #Environment and production variables
 server/config/config.js
+.env
