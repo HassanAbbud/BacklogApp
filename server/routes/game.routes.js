@@ -7,7 +7,7 @@ router.use(authMiddleware);
 // Open routes
 router.post('/addGame', gameController.addGame);
 router.get('/getGames', gameController.getGames);
-router.get('/getGameById', gameController.getGameById);
+router.get('/getGameById/:id', gameController.getGameById);
 router.put('/updateGame', gameController.updateGame);
 router.delete('/deleteGame', gameController.deleteGame);
 

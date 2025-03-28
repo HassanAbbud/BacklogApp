@@ -35,8 +35,7 @@ exports.getGames = async (req, res) => {
 
 exports.getGameById = async (req, res) => {
   try {
-    const { id } = req.params;
-    const game = await Game.findOne({ _id: id, user: req.user.id });
+    const game = await Game.findById(req.params.id);
 
     if (!game) {
       return res.status(404).json({ message: 'Game not found' });
