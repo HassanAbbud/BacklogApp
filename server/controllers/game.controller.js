@@ -35,8 +35,7 @@ exports.getGames = async (req, res) => {
 
 exports.getGameById = async (req, res) => {
   try {
-    const { id } = req.params;
-    const game = await Game.findById({ _id: id, user: req.user.id });
+    const game = await Game.findById(req.params.id);
 
     if (!game) {
       return res.status(404).json({ message: 'Game not found' });
@@ -53,8 +52,8 @@ exports.updateGame = async (req, res) => {
     const { id } = req.params;
     const { title, status, platform, estimatedPlayTime, actualPlayTime, priority, notes } = req.body;
 
-    const updatedGame = await Game.findOneAndUpdate(
-      { _id: id, user: req.user.id },
+    const updatedGame = await Game.findByIdAndUpdate(
+      id, 
       { title, status, platform, estimatedPlayTime, actualPlayTime, priority, notes },
       { new: true, runValidators: true }
     );
