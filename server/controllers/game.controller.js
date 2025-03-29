@@ -52,8 +52,8 @@ exports.updateGame = async (req, res) => {
     const { id } = req.params;
     const { title, status, platform, estimatedPlayTime, actualPlayTime, priority, notes } = req.body;
 
-    const updatedGame = await Game.findOneAndUpdate(
-      { _id: id, user: req.user.id }, 
+    const updatedGame = await Game.findByIdAndUpdate(
+      id, 
       { title, status, platform, estimatedPlayTime, actualPlayTime, priority, notes },
       { new: true, runValidators: true }
     );

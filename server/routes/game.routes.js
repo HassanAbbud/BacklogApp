@@ -8,7 +8,7 @@ router.use(authMiddleware);
 router.post('/addGame', gameController.addGame);
 router.get('/getGames', gameController.getGames);
 router.get('/getGameById/:id', gameController.getGameById);
-router.put('/updateGame', gameController.updateGame);
-router.delete('/deleteGame', gameController.deleteGame);
+router.put('/updateGame/:id', gameController.updateGame);
+router.delete('/deleteGame/:id', gameController.deleteGame);
 
 module.exports = router;
