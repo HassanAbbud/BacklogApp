@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Catalog from "./pages/Catalog"; 
 //import Account from "./pages/Account";
 //import NotFound from "./pages/NotFound"; 
-import "./App.css";
+import Charts from "./pages/Charts";
 
 function App() {
   return (
@@ -19,6 +19,7 @@ function App() {
         <Routes>
           {/* <Route path="/" element={<Home />} /> */}
           <Route path="/catalog" element={<Catalog />} />
+          <Route path="/charts" element={<Charts />} />
           {/* <Route path="/account" element={<Account />} /> */}
           {/* <Route path="*" element={<NotFound />} /> */}
         </Routes>

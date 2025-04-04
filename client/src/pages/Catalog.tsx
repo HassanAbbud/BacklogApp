@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import "./App.css";
+import "../App.css";
 
 interface Game {
   _id: string;
@@ -16,7 +16,7 @@ interface User {
   games: Game[];
 }
 
-function App() {
+function Catalog() {
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -88,4 +88,4 @@ function App() {
   );
 }
 
-export default App;
+export default Catalog;
