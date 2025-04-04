@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./SignInSignUpForm.css"; // Ensure you copy your CSS styles here
+import "./SignInSignup.css";
 
 const SignInSignUpForm: React.FC = () => {
     const [isSignUpMode, setIsSignUpMode] = useState(false);
