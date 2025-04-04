@@ -1,0 +1,30 @@
+/* filepath: c:\Users\aksha\Documents\GitHub\BacklogApp\client\src\pages\Catalog.css */
+.landing-page {
+    text-align: center;
+    padding: 50px;
+    font-family: Arial, sans-serif;
+}
+
+.landing-page h1 {
+    font-size: 3em;
+    color: #3498db;
+}
+
+.landing-page p {
+    font-size: 1.2em;
+    margin: 20px 0;
+}
+
+.navigate-button {
+    padding: 10px 20px;
+    font-size: 1em;
+    color: #fff;
+    background-color: #3498db;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.navigate-button:hover {
+    background-color: #2980b9;
+}
