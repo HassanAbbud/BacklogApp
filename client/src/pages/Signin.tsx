@@ -9,7 +9,7 @@ const SignInSignUpForm: React.FC = () => {
             {/* Sign Up Form */}
             <div className="form-container sign-up-container">
                 <form onSubmit={(e) => e.preventDefault()}>
-                    <h1>Create Account</h1>
+                    <h1>Create Account</h1>np
                     <div className="social-container">
                         <a href="#" className="social"><i className="fab fa-facebook-f"></i></a>
                         <a href="#" className="social"><i className="fab fa-google-plus-g"></i></a>
