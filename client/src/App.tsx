@@ -1,9 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 //import Home from "./pages/Home";
-import Catalog from "./pages/Catalog"; 
+import Catalog from "./pages/Catalog";
 //import Account from "./pages/Account";
 //import NotFound from "./pages/NotFound"; 
 import "./App.css";
+import SignInSignUp from "./pages/SignInSignUp";
 
 function App() {
   return (
@@ -15,13 +16,21 @@ function App() {
           <a href="/catalog" className="btn blue">My Backlogs</a>
           <a href="/account" className="btn green">Account</a>
         </div>
-        
+
         <Routes>
           {/* <Route path="/" element={<Home />} /> */}
           <Route path="/catalog" element={<Catalog />} />
           {/* <Route path="/account" element={<Account />} /> */}
           {/* <Route path="*" element={<NotFound />} /> */}
         </Routes>
+
+        <Routes>
+          {/* Add the SignInSignUp route */}
+          <Route path="/signin-signup" element={<SignInSignUp />} />
+          <Route path="/catalog" element={<Catalog />} />
+          {/* Other routes can be added here */}
+        </Routes>
+
       </div>
     </Router>
   );
