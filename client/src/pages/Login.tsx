@@ -14,7 +14,7 @@ import { useUserStore } from '../stores/userStore';
 import { ProgressSpinner } from 'primereact/progressspinner';
 
 const LoginPage = () => {
-    // 状态管理
+    // Status management
     const [activeIndex, setActiveIndex] = useState(0);
     const [loginEmail, setLoginEmail] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
@@ -30,25 +30,25 @@ const LoginPage = () => {
         username: ''
     });
 
-    // 上下文和路由
+    // context and router
     const { layoutConfig } = useContext(LayoutContext);
     const router = useNavigate();
     const { setUser, user } = useUserStore();
 
-    // 如果已登录则重定向
+    // redirect if logined in
     useEffect(() => {
         if (user) {
             router('/');
         }
     }, [user, router]);
 
-    // 样式类
+    // styles
     const containerClassName = classNames(
         'surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden',
         { 'p-input-filled': layoutConfig.inputStyle === 'filled' }
     );
 
-    // 表单验证
+    // form validation
     const validateForm = (isLogin: boolean) => {
         const errors = {
             email: '',
@@ -78,7 +78,7 @@ const LoginPage = () => {
         return !Object.values(errors).some(error => error !== '');
     };
 
-    // 登录处理
+    // handle login and register
     const handleLogin = async () => {
         setError('');
         if (!validateForm(true)) return;
@@ -108,7 +108,6 @@ const LoginPage = () => {
         }
     };
 
-    // 注册处理
     const handleRegister = async () => {
         setError('');
         if (!validateForm(false)) return;
@@ -142,7 +141,7 @@ const LoginPage = () => {
         }
     };
 
-    // 渲染函数
+    // rendering
     return (
         <div className={containerClassName}>
             <div className="flex flex-column align-items-center justify-content-center">
@@ -187,7 +186,7 @@ const LoginPage = () => {
                                 setFormErrors({ email: '', password: '', username: '' });
                             }}
                         >
-                            {/* 登录标签页 */}
+                            {/* login tab*/}
                             <TabPanel header="Login">
                                 <div>
                                     <label htmlFor="email" className="block text-900 text-xl font-medium mb-2">
@@ -242,7 +241,7 @@ const LoginPage = () => {
                                 </div>
                             </TabPanel>
 
-                            {/* 注册标签页 */}
+                            {/* register tab */}
                             <TabPanel header="Register">
                                 <div>
                                     <label htmlFor="username" className="block text-900 text-xl font-medium mb-2">
