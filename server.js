@@ -6,7 +6,13 @@ import connectDB from './server/config/config.js'; //change to devConfig with yo
 
 const server = express();
 
-server.use(cors());
+
+server.use(cors({
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  }
+));
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
 

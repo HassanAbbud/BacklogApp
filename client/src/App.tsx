@@ -7,7 +7,7 @@ import Charts from "./pages/Charts";
 import { PrimeReactProvider } from "primereact/api";
 import { LayoutProvider } from "./layout/context/layoutcontext";
 import Layout from "./layout/layout";
-import Test from "./pages/test";
+import Test from "./pages/Test";
 import LoginPage from "./pages/Login";
 
 
