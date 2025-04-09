@@ -1,17 +1,17 @@
-import express from'express';
+import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import app from './server/app.js';
-import connectDB from './server/config/config.js'; //change to devConfig with your mongo database URL
+import connectDB from './server/config/devConfig.js'; //change to devConfig with your mongo database URL
 
 const server = express();
 
 
 server.use(cors({
-    origin: 'http://localhost:5173',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-  }
+  origin: 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}
 ));
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
