@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { classNames } from 'primereact/utils';
 import React, { forwardRef, useContext, useImperativeHandle, useRef } from 'react';
 import { AppTopbarRef } from '../types';
@@ -12,6 +12,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     const topbarmenuRef = useRef(null);
     const topbarmenubuttonRef = useRef(null);
     const { user, logout } = useUserStore(); // load user status and logout function
+    const navigate = useNavigate(); // hook for redirection
 
     useImperativeHandle(ref, () => ({
         menubutton: menubuttonRef.current,
@@ -25,10 +26,10 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
         return user.username.charAt(0).toUpperCase();
     };
 
-    // handle logout
+    // Handle logout and redirect to login page
     const handleLogout = () => {
         logout();
-        // redicrect to login page if needed
+        navigate('/login');  // Redirect to the login page after logging out
     };
 
     return (
@@ -37,21 +38,34 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                 <img
                     src={`/layout/images/logo-${layoutConfig.colorScheme !== 'light' ? 'white' : 'dark'}.svg`}
                     width="47.22px"
-                    height={'35px'}
+                    height="35px"
                     alt="logo"
                 />
                 <span>GAMING BACKLOG</span>
             </Link>
 
-            <button ref={menubuttonRef} type="button" className="p-link layout-menu-button layout-topbar-button" onClick={onMenuToggle}>
+            <button
+                ref={menubuttonRef}
+                type="button"
+                className="p-link layout-menu-button layout-topbar-button"
+                onClick={onMenuToggle}
+            >
                 <i className="pi pi-bars" />
             </button>
 
-            <button ref={topbarmenubuttonRef} type="button" className="p-link layout-topbar-menu-button layout-topbar-button" onClick={showProfileSidebar}>
+            <button
+                ref={topbarmenubuttonRef}
+                type="button"
+                className="p-link layout-topbar-menu-button layout-topbar-button"
+                onClick={showProfileSidebar}
+            >
                 <i className="pi pi-ellipsis-v" />
             </button>
 
-            <div ref={topbarmenuRef} className={classNames('layout-topbar-menu', { 'layout-topbar-menu-mobile-active': layoutState.profileSidebarVisible })}>
+            <div
+                ref={topbarmenuRef}
+                className={classNames('layout-topbar-menu', { 'layout-topbar-menu-mobile-active': layoutState.profileSidebarVisible })}
+            >
                 <button type="button" className="p-link layout-topbar-button">
                     <i className="pi pi-calendar"></i>
                     <span>Calendar</span>

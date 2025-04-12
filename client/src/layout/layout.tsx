@@ -1,21 +1,21 @@
 import { useEventListener, useUnmountEffect } from 'primereact/hooks';
 import React, { useContext, useEffect, useRef } from 'react';
 import { classNames } from 'primereact/utils';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Outlet } from 'react-router-dom'; // ✅ Added Outlet
 import AppFooter from './AppFooter';
 import AppSidebar from './AppSidebar';
 import AppTopbar from './AppTopbar';
 import AppConfig from './AppConfig';
 import { LayoutContext } from './context/layoutcontext';
 import { PrimeReactContext } from 'primereact/api';
-import { ChildContainerProps, AppTopbarRef } from '../types';
+import { AppTopbarRef } from '../types'; // ✅ Removed ChildContainerProps since it's unused now
 
-const Layout = ({ children }: ChildContainerProps) => {
+const Layout = () => {
     const { layoutConfig, layoutState, setLayoutState } = useContext(LayoutContext);
     const { setRipple } = useContext(PrimeReactContext);
     const topbarRef = useRef<AppTopbarRef>(null);
     const sidebarRef = useRef<HTMLDivElement>(null);
-    
+
     const [bindMenuOutsideClickListener, unbindMenuOutsideClickListener] = useEventListener({
         type: 'click',
         listener: (event: MouseEvent) => {
@@ -85,7 +85,10 @@ const Layout = ({ children }: ChildContainerProps) => {
         if (document.body.classList) {
             document.body.classList.remove('blocked-scroll');
         } else {
-            document.body.className = document.body.className.replace(new RegExp('(^|\\b)' + 'blocked-scroll'.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+            document.body.className = document.body.className.replace(
+                new RegExp('(^|\\b)' + 'blocked-scroll'.split(' ').join('|') + '(\\b|$)', 'gi'),
+                ' '
+            );
         }
     };
 
@@ -126,7 +129,9 @@ const Layout = ({ children }: ChildContainerProps) => {
                     <AppSidebar />
                 </div>
                 <div className="layout-main-container">
-                    <div className="layout-main">{children}</div>
+                    <div className="layout-main">
+                        <Outlet /> {/* ✅ Replaced {children} */}
+                    </div>
                     <AppFooter />
                 </div>
                 <AppConfig />

@@ -1,0 +1,360 @@
+/* Login.module.css (Size Update) */
+
+.container {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    position: relative;
+    overflow: hidden;
+    width: 1200px;
+    max-width: 95%;
+    min-height: 700px;
+}
+
+/* Base styles for form containers */
+.signInContainer,
+.signUpContainer {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    transition: all 0.6s ease-in-out;
+    width: 50%;
+}
+
+.signInContainer {
+    left: 0;
+    z-index: 2;
+    /* Initially on top */
+    opacity: 1;
+}
+
+.signUpContainer {
+    left: 0;
+    opacity: 0;
+    /* Initially hidden */
+    z-index: 1;
+}
+
+/* --- Panel Active State --- */
+.container.rightPanelActive .signInContainer {
+    transform: translateX(100%);
+    opacity: 0;
+    z-index: 1;
+}
+
+.container.rightPanelActive .signUpContainer {
+    transform: translateX(100%);
+    opacity: 1;
+    z-index: 5;
+    animation: show 0.6s;
+}
+
+/* --- Overlay --- */
+.overlayContainer {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    transition: transform 0.6s ease-in-out;
+    z-index: 100;
+}
+
+.container.rightPanelActive .overlayContainer {
+    transform: translateX(-100%);
+}
+
+.overlay {
+    background: #ff416c;
+    background: -webkit-linear-gradient(to right, #ff4b2b, #ff416c);
+    background: linear-gradient(to right, #09253f, #1577b4);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 0 0;
+    color: #ffffff;
+    /* Default text color for overlay */
+    position: relative;
+    left: -100%;
+    height: 100%;
+    width: 200%;
+    transform: translateX(0);
+    transition: transform 0.6s ease-in-out;
+}
+
+.container.rightPanelActive .overlay {
+    transform: translateX(50%);
+}
+
+.overlayPanel {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 50px;
+    /* Increased horizontal padding */
+    text-align: center;
+    top: 0;
+    height: 100%;
+    width: 50%;
+    transform: translateX(0);
+    transition: transform 0.6s ease-in-out;
+}
+
+.overlayLeft {
+    transform: translateX(-20%);
+}
+
+.container.rightPanelActive .overlayLeft {
+    transform: translateX(0);
+}
+
+.overlayRight {
+    right: 0;
+    transform: translateX(0);
+}
+
+.container.rightPanelActive .overlayRight {
+    transform: translateX(20%);
+}
+
+/* --- Form and Input Styles --- */
+.form {
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 3rem 60px 3rem 60px;
+    height: 100%;
+    text-align: center;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.title {
+    font-weight: bold;
+    margin: 0;
+    margin-bottom: 1.5rem;
+    color: #000;
+    /* Default title color (for forms) */
+}
+
+/* Specific style for titles within the overlay */
+.overlayPanel .title {
+    color: #ffffff;
+}
+
+
+/* Style for the input wrapper div */
+.inputContainer {
+    width: 100%;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+
+/* Style applied to PrimeReact InputText/Password components via className */
+.input {
+    background-color: #eee;
+    border: none;
+    padding: 12px 15px;
+    margin-top: 5px;
+    width: 100%;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 75, 43, 0.3);
+    /* Focus outline using theme color */
+}
+
+/* PrimeReact Invalid State */
+.p-invalid {
+    border-color: #ef4444 !important;
+    /* Use a distinct error color */
+}
+
+/* PrimeReact Error Message */
+.p-error {
+    color: #ef4444;
+    margin-top: 4px;
+    display: block;
+    text-align: left;
+    font-size: 0.8rem;
+    padding-left: 5px;
+    width: 100%;
+}
+
+/* Style applied to PrimeReact Password's internal input */
+.passwordInput {
+    background-color: #eee;
+    border: none;
+    margin-top: 5px;
+    padding: 10px 25px;
+    width: 100%;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.passwordInput:focus {
+    outline: none;
+    /* Focus handled by parent .p-password focus state */
+}
+
+/* PrimeReact Password component wrapper */
+.p-password {
+    width: 100%;
+    display: flex;
+}
+
+.p-password .p-inputtext {
+    /* Target internal input specifically */
+    background-color: #eee;
+    border: none;
+    border-radius: 4px;
+}
+
+.p-password.p-inputwrapper-focus {
+    /* Style wrapper on focus */
+    box-shadow: 0 0 0 2px rgba(255, 75, 43, 0.3) !important;
+    border-color: transparent !important;
+    /* Hide potential internal border */
+}
+
+
+.anchor {
+    color: #333;
+    font-size: 14px;
+    text-decoration: none;
+    margin: 15px 0;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    text-align: right;
+}
+
+.anchor:hover {
+    text-decoration: underline;
+}
+
+/* Style for the main action buttons */
+.authButton {
+    border-radius: 20px;
+    border: 1px solid #1577b4;
+    background-color: #1577b4;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 12px 45px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in, background-color 0.2s ease;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.authButton:hover {
+    background-color: #0319a4;
+    /* Darken on hover */
+    border-color: #e03a1a;
+}
+
+.authButton:active {
+    transform: scale(0.95);
+}
+
+.authButton:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 75, 43, 0.5);
+}
+
+.authButton:disabled {
+    background-color: #cccccc;
+    border-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Style for the overlay buttons */
+.ghostButton {
+    background-color: transparent;
+    border-color: #ffffff;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 20px;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 12px 45px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in, background-color 0.2s ease;
+    cursor: pointer;
+}
+
+.ghostButton:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    /* Slight background on hover */
+}
+
+.ghostButton:active {
+    transform: scale(0.95);
+}
+
+.ghostButton:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
+}
+
+/* Spinner overlay */
+.spinnerContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.7);
+    z-index: 10;
+    border-radius: 10px;
+    /* Match container */
+}
+
+/* Error message styling */
+.errorMessage {
+    width: 100%;
+    margin-bottom: 1rem;
+    box-sizing: border-box;
+    /* PrimeReact Message component handles its own padding/border */
+}
+
+/* Paragraph style for overlay text */
+.paragraph {
+    font-size: 14px;
+    font-weight: 100;
+    line-height: 20px;
+    letter-spacing: 0.5px;
+    margin: 20px 0 30px;
+}
+
+
+/* Animation */
+@keyframes show {
+
+    0%,
+    49.99% {
+        opacity: 0;
+        z-index: 1;
+    }
+
+    50%,
+    100% {
+        opacity: 1;
+        z-index: 5;
+    }
+}
