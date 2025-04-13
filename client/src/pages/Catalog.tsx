@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
-// Port
+// Set default base URL for Axios (adjust port if needed)
 axios.defaults.baseURL = 'http://localhost:3000';
 
 // PrimeReact imports
@@ -59,7 +59,7 @@ const priorityOptions = [
   { label: '5 (Lowest)', value: 5 }
 ];
 
-// Helper functions to compute progress and hours left for each game
+// Helper function for row templates
 const progressBodyTemplate = (rowData: Game) => {
   if (rowData.estimatedPlayTime > 0) {
     const progress = (rowData.actualPlayTime / rowData.estimatedPlayTime) * 100;
@@ -76,8 +76,16 @@ const hoursLeftBodyTemplate = (rowData: Game) => {
   return 'N/A';
 };
 
+// Helper function to choose a color based on a percentage value
+const getColorClass = (percentage: number): string => {
+  if (percentage < 25) return 'red';
+  if (percentage < 50) return 'orange';
+  if (percentage < 75) return 'yellow';
+  return 'green';
+};
+
 function Catalog() {
-  // Toast reference for notifications
+  // Toast ref for notifications.
   const toast = useRef<Toast>(null);
 
   // State for user profile and error handling
@@ -92,7 +100,7 @@ function Catalog() {
   // For managing multiple selection in DataTable
   const [selectedGames, setSelectedGames] = useState<Game[]>([]);
 
-  // Dialog state for create/update game
+  // State for create/edit dialog
   const [gameDialogVisible, setGameDialogVisible] = useState(false);
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
   const [gameFormData, setGameFormData] = useState<Game>({
@@ -152,11 +160,12 @@ function Catalog() {
     fetchGames();
   }, []);
 
-  // Overall totals logic
+  // Compute overall totals
   const totalEstimated = games.reduce((sum, game) => sum + game.estimatedPlayTime, 0);
   const totalActual = games.reduce((sum, game) => sum + game.actualPlayTime, 0);
   const overallProgress = totalEstimated > 0 ? (totalActual / totalEstimated) * 100 : 0;
   const totalHoursLeft = totalEstimated - totalActual;
+  const hoursLeftRatio = totalEstimated > 0 ? (totalHoursLeft / totalEstimated) * 100 : 0;
 
   // Open dialog for a new game
   const openNewGameDialog = () => {
@@ -349,7 +358,7 @@ function Catalog() {
     </div>
   );
 
-  // Footer for the create/edit dialog
+  // Define dialog footer so that it's available
   const gameDialogFooter = (
     <div>
       <Button
@@ -406,19 +415,26 @@ function Catalog() {
         <p>Loading user data...</p>
       )}
 
-      {/* Summary Section for all games */}
+      {/* Summary Section */}
       <div className="card mt-4">
         <h2>Summary</h2>
         <div className="summary">
           <p>
-            Overall Progress: {totalEstimated > 0 ? overallProgress.toFixed(1) : 0}%
+            Overall Progress:{' '}
+            <span className={getColorClass(overallProgress)}>
+              {totalEstimated > 0 ? overallProgress.toFixed(1) : 0}%
+            </span>
           </p>
           <p>
-            Total Hours Left: {totalHoursLeft > 0 ? totalHoursLeft : 0} Hours
+            Total Hours Left:{' '}
+            <span className={getColorClass(overallProgress)}>
+              {totalHoursLeft > 0 ? totalHoursLeft : 0} Hours
+            </span>
           </p>
         </div>
       </div>
 
+      {/* Manage My Games Section */}
       <div className="card mt-4">
         <div className="flex justify-content-between align-items-center mb-3">
           <h2 className="m-0">Manage My Games</h2>
@@ -461,6 +477,7 @@ function Catalog() {
         </DataTable>
       </div>
 
+      {/* Dialog for create/edit game */}
       <Dialog
         visible={gameDialogVisible}
         style={{ width: '32rem' }}
