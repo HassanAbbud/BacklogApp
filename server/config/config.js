@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
-
-// You should name this constant with your mongodb URL 
-const URI = 'mongodb+srv://akshayofficial0112:W2uFbmT3pEy9EfxF@clusterbacklog.rtlkc4j.mongodb.net/';
+require('dotenv').config();
+ 
+// You should name this constant with your mongodb URL from a .env file 
+const URI = process.env.URI;
 
 const connectDB = async () => {
   try {
@@ -10,13 +11,13 @@ const connectDB = async () => {
       useUnifiedTopology: true
     });
     console.log('MongoDB connected successfully');
-
+    
     const db = mongoose.connection.db;
     console.log(`Connected to database: ${db.databaseName}`);
-
+    
     const collections = await db.listCollections().toArray();
     console.log('Collections:', collections.map(c => c.name));
-
+    
   } catch (error) {
     console.error('MongoDB connection error:', error);
     process.exit(1);
