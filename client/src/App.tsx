@@ -22,8 +22,7 @@ function App() {
               <Route path="/catalog" element={<Catalog />} />
               <Route path="/charts" element={<Charts />} />
               <Route path="/test" element={<Test />} />
-              <Route path="/login" element={<LoginPage />} />
-              
+              <Route path="/login" element={<LoginPage />} />              
             </Routes>
           </Layout>
         </BrowserRouter>
