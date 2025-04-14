@@ -8,7 +8,7 @@ const AppFooter = () => {
 
     return (
         <div className="layout-footer">
-            <img src={`../../public/LogoCircle.png`} alt="Logo" height="20" className="mr-2" />
+            <img src={`/LogoCircle.png`} alt="Logo" height="20" className="mr-2" />
             
             <span className="font-medium ml-2">Copyright © 2025.</span>
         </div>

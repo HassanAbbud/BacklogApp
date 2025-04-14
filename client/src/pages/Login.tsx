@@ -145,7 +145,7 @@ const LoginPage = () => {
         <div className={containerClassName}>
             <div className="flex flex-column align-items-center justify-content-center">
                 <img
-                    src={`../../public/LogoCircle.png`}
+                    src={`/LogoCircle.png`}
                     alt="Logo"
                     className="mb-5 w-6rem flex-shrink-0"
                 />

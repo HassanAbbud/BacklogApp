@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { Link, useNavigate } from "react-router-dom";
 import { classNames } from "primereact/utils";
 import React, {
@@ -41,7 +40,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
   return (
     <div className="layout-topbar">
       <Link to="/" className="layout-topbar-logo">
-        <img src={`../../public/LogoCircle.png`} alt="logo" />
+        <img src={`/LogoCircle.png`} alt="logo" />
         <span>GAMING BACKLOG</span>
       </Link>
 
