@@ -2,62 +2,62 @@
 .progress-container {
     display: flex;
     flex-direction: column;
-  }
-  
-  .progress-text {
+}
+
+.progress-text {
     display: flex;
     justify-content: space-between;
     margin-bottom: 0.25rem;
-  }
-  
-  .progress-percentage {
+}
+
+.progress-percentage {
     font-weight: 600;
-  }
-  
-  /* Priority badges */
-  .p-badge {
+}
+
+/* Priority badges */
+.p-badge {
     border-radius: 4px;
     padding: 0.25rem 0.5rem;
     font-size: 0.75rem;
     font-weight: 700;
-  }
-  
-  .p-badge-success {
+}
+
+.p-badge-success {
     background-color: #d4edda;
     color: #155724;
-  }
-  
-  .p-badge-warning {
+}
+
+.p-badge-warning {
     background-color: #fff3cd;
     color: #856404;
-  }
-  
-  .p-badge-danger {
+}
+
+.p-badge-danger {
     background-color: #f8d7da;
     color: #721c24;
-  }
-  
-  /* Confirmation dialog icon styling */
-  .confirmation-content {
+}
+
+/* Confirmation dialog icon styling */
+.confirmation-content {
     display: flex;
     align-items: center;
-  }
-  
-  .confirmation-content i {
+}
+
+.confirmation-content i {
     color: #ff9800;
-  }
-  
-  /* Custom DataTable styling overrides */
-  .datatable-responsive .p-datatable-tbody > tr > td .p-column-title {
+}
+
+/* Custom DataTable styling overrides */
+.datatable-responsive .p-datatable-tbody > tr > td .p-column-title {
     display: none;
-  }
-  
-  @media screen and (max-width: 768px) {
+}
+
+@media screen and (max-width: 768px) {
     .datatable-responsive .p-datatable-thead > tr > th,
     .datatable-responsive .p-datatable-tfoot > tr > td {
       display: none !important;
     }
-  
+
     .datatable-responsive .p-datatable-tbody > tr > td {
       text-align: left;
       display: block;
@@ -66,7 +66,7 @@
       clear: left;
       border: 0 none;
     }
-  
+
     .datatable-responsive .p-datatable-tbody > tr > td .p-column-title {
       padding: 0.4rem;
       min-width: 30%;
@@ -74,4 +74,27 @@
       margin: -0.4em 1em -0.4em -0.4rem;
       font-weight: bold;
     }
-  }
+}
+
+/* Summary Section Styling */
+.summary {
+    font-size: 1.5rem;
+    margin: 1rem 0;
+}
+
+/* Color classes used in summary */
+.red {
+    color: red;
+}
+
+.orange {
+    color: orange;
+}
+
+.yellow {
+    color: #ffc107;
+}
+
+.green {
+    color: green;
+}
