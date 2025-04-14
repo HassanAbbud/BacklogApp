@@ -24,5 +24,4 @@ dist-ssr
 *.sw?
 
 #Environment and production variables
-server/config/config.js
 .env

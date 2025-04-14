@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import app from './server/app.js';
-import connectDB from './server/config/devConfig.js'; //change to devConfig with your mongo database URL
+import connectDB from './server/config/config.js'; 
 
 const server = express();
 
