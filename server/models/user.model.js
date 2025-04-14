@@ -16,7 +16,10 @@ const UserSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
       trim: true,
-      match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
+      match: [
+        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+        "Please fill a valid email address",
+      ],
     },
     password: {
       type: String,
@@ -33,11 +36,18 @@ const UserSchema = new mongoose.Schema(
         ref: "Game",
       },
     ],
+
+    // ✅ Add these fields:
+    resetToken: {
+      type: String,
+    },
+    resetTokenExpire: {
+      type: Number, // or Date if you prefer working with Date objects
+    },
   },
   {
     timestamps: true,
     methods: {
-      // compare password
       async comparePassword(candidatePassword) {
         return bcrypt.compare(candidatePassword, this.password);
       },

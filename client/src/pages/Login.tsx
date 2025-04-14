@@ -228,7 +228,7 @@ const LoginPage = () => {
                                             />
                                             <label htmlFor="rememberme">Remember me</label>
                                         </div>
-                                        <a className="font-medium no-underline ml-2 text-right cursor-pointer" style={{ color: 'var(--primary-color)' }}>
+                                        <a onClick={() => router('/forgot-password')} className="font-medium no-underline ml-2 text-right cursor-pointer" style={{ color: 'var(--primary-color)' }} >
                                             Forgot password?
                                         </a>
                                     </div>
