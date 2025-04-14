@@ -1,30 +1,100 @@
-/* filepath: c:\Users\aksha\Documents\GitHub\BacklogApp\client\src\pages\Catalog.css */
-.landing-page {
-    text-align: center;
-    padding: 50px;
-    font-family: Arial, sans-serif;
+/* Catalog progress styling */
+.progress-container {
+    display: flex;
+    flex-direction: column;
 }
 
-.landing-page h1 {
-    font-size: 3em;
-    color: #3498db;
+.progress-text {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.25rem;
 }
 
-.landing-page p {
-    font-size: 1.2em;
-    margin: 20px 0;
+.progress-percentage {
+    font-weight: 600;
 }
 
-.navigate-button {
-    padding: 10px 20px;
-    font-size: 1em;
-    color: #fff;
-    background-color: #3498db;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+/* Priority badges */
+.p-badge {
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
 }
 
-.navigate-button:hover {
-    background-color: #2980b9;
+.p-badge-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.p-badge-warning {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.p-badge-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Confirmation dialog icon styling */
+.confirmation-content {
+    display: flex;
+    align-items: center;
+}
+
+.confirmation-content i {
+    color: #ff9800;
+}
+
+/* Custom DataTable styling overrides */
+.datatable-responsive .p-datatable-tbody > tr > td .p-column-title {
+    display: none;
+}
+
+@media screen and (max-width: 768px) {
+    .datatable-responsive .p-datatable-thead > tr > th,
+    .datatable-responsive .p-datatable-tfoot > tr > td {
+      display: none !important;
+    }
+
+    .datatable-responsive .p-datatable-tbody > tr > td {
+      text-align: left;
+      display: block;
+      width: 100%;
+      float: left;
+      clear: left;
+      border: 0 none;
+    }
+
+    .datatable-responsive .p-datatable-tbody > tr > td .p-column-title {
+      padding: 0.4rem;
+      min-width: 30%;
+      display: inline-block;
+      margin: -0.4em 1em -0.4em -0.4rem;
+      font-weight: bold;
+    }
+}
+
+/* Summary Section Styling */
+.summary {
+    font-size: 1.5rem;
+    margin: 1rem 0;
+}
+
+/* Color classes used in summary */
+.red {
+    color: red;
+}
+
+.orange {
+    color: orange;
+}
+
+.yellow {
+    color: #ffc107;
+}
+
+.green {
+    color: green;
 }
