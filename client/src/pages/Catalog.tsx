@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
-// Set the default base URL for Axios (change port as needed)
+// Set default base URL for Axios (adjust port if needed)
 axios.defaults.baseURL = 'http://localhost:3000';
 
 // PrimeReact imports
@@ -59,11 +59,36 @@ const priorityOptions = [
   { label: '5 (Lowest)', value: 5 }
 ];
 
-export default function Catalog() {
-  // Ref for Toast notifications
+// Helper function for row templates
+const progressBodyTemplate = (rowData: Game) => {
+  if (rowData.estimatedPlayTime > 0) {
+    const progress = (rowData.actualPlayTime / rowData.estimatedPlayTime) * 100;
+    return `${progress.toFixed(1)}%`;
+  }
+  return 'N/A';
+};
+
+const hoursLeftBodyTemplate = (rowData: Game) => {
+  if (rowData.estimatedPlayTime > 0) {
+    const left = rowData.estimatedPlayTime - rowData.actualPlayTime;
+    return left > 0 ? `${left} Hours` : '0 Hours';
+  }
+  return 'N/A';
+};
+
+// Helper function to choose a color based on a percentage value
+const getColorClass = (percentage: number): string => {
+  if (percentage < 25) return 'red';
+  if (percentage < 50) return 'orange';
+  if (percentage < 75) return 'yellow';
+  return 'green';
+};
+
+function Catalog() {
+  // Toast ref for notifications.
   const toast = useRef<Toast>(null);
 
-  // State for user and error
+  // State for user profile and error handling
   const [user, setUser] = useState<User | null>(null);
   const [userError, setUserError] = useState<string | null>(null);
 
@@ -72,7 +97,10 @@ export default function Catalog() {
   const [gamesError, setGamesError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // State for dialog (create/update game)
+  // For managing multiple selection in DataTable
+  const [selectedGames, setSelectedGames] = useState<Game[]>([]);
+
+  // State for create/edit dialog
   const [gameDialogVisible, setGameDialogVisible] = useState(false);
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
   const [gameFormData, setGameFormData] = useState<Game>({
@@ -85,7 +113,7 @@ export default function Catalog() {
     notes: ''
   });
 
-  // Fetch user profile (with populated games) on mount.
+  // Fetch user profile (with populated games) on mount
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -94,7 +122,6 @@ export default function Catalog() {
           setUserError('No token found. Please log in.');
           return;
         }
-        // Note: The URL here uses /api/users/profile per your user routes.
         const response = await axios.get('/api/users/profile', {
           headers: { Authorization: `Bearer ${token}` }
         });
@@ -107,7 +134,7 @@ export default function Catalog() {
     fetchUserData();
   }, []);
 
-  // Fetch games for the DataTable.
+  // Fetch games for the DataTable
   const fetchGames = async () => {
     try {
       setLoading(true);
@@ -120,7 +147,6 @@ export default function Catalog() {
       const response = await axios.get('/api/games/getGames', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      // Ensure we always use an array.
       setGames(Array.isArray(response.data) ? response.data : []);
       setLoading(false);
     } catch (error) {
@@ -134,7 +160,14 @@ export default function Catalog() {
     fetchGames();
   }, []);
 
-  // Open dialog for a new game.
+  // Compute overall totals
+  const totalEstimated = games.reduce((sum, game) => sum + game.estimatedPlayTime, 0);
+  const totalActual = games.reduce((sum, game) => sum + game.actualPlayTime, 0);
+  const overallProgress = totalEstimated > 0 ? (totalActual / totalEstimated) * 100 : 0;
+  const totalHoursLeft = totalEstimated - totalActual;
+  const hoursLeftRatio = totalEstimated > 0 ? (totalHoursLeft / totalEstimated) * 100 : 0;
+
+  // Open dialog for a new game
   const openNewGameDialog = () => {
     setSelectedGame(null);
     setGameFormData({
@@ -149,7 +182,7 @@ export default function Catalog() {
     setGameDialogVisible(true);
   };
 
-  // Open dialog to edit an existing game.
+  // Open dialog to edit an existing game
   const openEditGameDialog = (game: Game) => {
     setSelectedGame(game);
     setGameFormData({ ...game });
@@ -160,7 +193,7 @@ export default function Catalog() {
     setGameDialogVisible(false);
   };
 
-  // Save game – Create if new, Update if editing.
+  // Save game – Create if new, update if editing
   const saveGame = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -174,7 +207,6 @@ export default function Catalog() {
         return;
       }
       if (!selectedGame) {
-        // Using full URL because axios.defaults.baseURL is set to your backend
         const addResponse = await axios.post('/api/games/addGame', gameFormData, {
           headers: { Authorization: `Bearer ${token}` }
         });
@@ -186,9 +218,11 @@ export default function Catalog() {
           life: 3000
         });
       } else {
-        const updateResponse = await axios.put(`/api/games/updateGame/${selectedGame._id}`, gameFormData, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const updateResponse = await axios.put(
+          `/api/games/updateGame/${selectedGame._id}`,
+          gameFormData,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
         const updatedGame = updateResponse.data.game;
         setGames((prev) =>
           prev.map((g) => (g._id === updatedGame._id ? updatedGame : g))
@@ -213,7 +247,7 @@ export default function Catalog() {
     }
   };
 
-  // Confirm deletion before deleting a game.
+  // Confirm deletion before deleting a single game
   const confirmDeleteGame = (game: Game) => {
     confirmDialog({
       message: `Are you sure you want to delete "${game.title}"?`,
@@ -257,7 +291,56 @@ export default function Catalog() {
     }
   };
 
-  // Template for action buttons in the DataTable.
+  // Delete multiple selected games
+  const deleteSelectedGames = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        toast.current?.show({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No token found. Please log in.',
+          life: 3000
+        });
+        return;
+      }
+      confirmDialog({
+        message: `Are you sure you want to delete ${selectedGames.length} selected game(s)?`,
+        header: 'Confirm Bulk Deletion',
+        icon: 'pi pi-exclamation-triangle',
+        accept: async () => {
+          await Promise.all(
+            selectedGames.map((game) =>
+              axios.delete(`/api/games/deleteGame/${game._id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+              })
+            )
+          );
+          setGames((prev) =>
+            prev.filter((g) => !selectedGames.some((sg) => sg._id === g._id))
+          );
+          setSelectedGames([]);
+          toast.current?.show({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Selected games deleted',
+            life: 3000
+          });
+        },
+        reject: () => {}
+      });
+    } catch (error: any) {
+      console.error('Error deleting selected games:', error);
+      toast.current?.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: error.response?.data?.message || 'Could not delete selected games',
+        life: 3000
+      });
+    }
+  };
+
+  // Template for action buttons in each row
   const actionBodyTemplate = (rowData: Game) => (
     <div className="flex gap-2">
       <Button
@@ -275,19 +358,19 @@ export default function Catalog() {
     </div>
   );
 
-  // Footer for the create/edit dialog.
+  // Define dialog footer so that it's available
   const gameDialogFooter = (
     <div>
-      <Button 
-        label="Cancel" 
-        icon="pi pi-times" 
-        onClick={hideGameDialog} 
-        className="p-button-text" 
+      <Button
+        label="Cancel"
+        icon="pi pi-times"
+        onClick={hideGameDialog}
+        className="p-button-text"
       />
-      <Button 
-        label={selectedGame ? "Update" : "Create"} 
-        icon="pi pi-check" 
-        onClick={saveGame} 
+      <Button
+        label={selectedGame ? "Update" : "Create"}
+        icon="pi pi-check"
+        onClick={saveGame}
       />
     </div>
   );
@@ -298,18 +381,6 @@ export default function Catalog() {
       <ConfirmDialog />
 
       <h1 className="title">Game Backlog</h1>
-      <div className="nav-buttons">
-        <Button label="Games" className="p-button-rounded p-button-secondary mr-2" />
-        <Button label="My Backlogs" className="p-button-rounded p-button-secondary mr-2" />
-        <Button label="Account" className="p-button-rounded p-button-secondary" />
-      </div>
-
-      <div className="backlog-header mt-4 mb-4">
-        <Button 
-          label="My Backlog #1" 
-          className="p-button-outlined p-button-info mr-2" 
-        />
-      </div>
 
       {userError && <p className="error">{userError}</p>}
       {user ? (
@@ -321,6 +392,7 @@ export default function Catalog() {
                 <th>My Games</th>
                 <th>Total Playtime</th>
                 <th>Current Playtime</th>
+                <th>Hours Left</th>
               </tr>
             </thead>
             <tbody>
@@ -328,13 +400,11 @@ export default function Catalog() {
                 <tr key={game._id}>
                   <td>{game.title}</td>
                   <td>{game.estimatedPlayTime} Hours</td>
+                  <td>{game.actualPlayTime} Hours</td>
                   <td>
-                    {game.actualPlayTime} Hours
-                    <span className="progress" style={{ color: "green" }}>
-                      {game.estimatedPlayTime > 0 && (
-                        <> (Progress: {((game.actualPlayTime / game.estimatedPlayTime) * 100).toFixed(1)}%)</>
-                      )}
-                    </span>
+                    {game.estimatedPlayTime > 0
+                      ? `${Math.max(game.estimatedPlayTime - game.actualPlayTime, 0)} Hours`
+                      : 'N/A'}
                   </td>
                 </tr>
               ))}
@@ -345,36 +415,69 @@ export default function Catalog() {
         <p>Loading user data...</p>
       )}
 
+      {/* Summary Section */}
+      <div className="card mt-4">
+        <h2>Summary</h2>
+        <div className="summary">
+          <p>
+            Overall Progress:{' '}
+            <span className={getColorClass(overallProgress)}>
+              {totalEstimated > 0 ? overallProgress.toFixed(1) : 0}%
+            </span>
+          </p>
+          <p>
+            Total Hours Left:{' '}
+            <span className={getColorClass(overallProgress)}>
+              {totalHoursLeft > 0 ? totalHoursLeft : 0} Hours
+            </span>
+          </p>
+        </div>
+      </div>
+
+      {/* Manage My Games Section */}
       <div className="card mt-4">
         <div className="flex justify-content-between align-items-center mb-3">
           <h2 className="m-0">Manage My Games</h2>
-          <Button 
-            label="New Game" 
-            icon="pi pi-plus" 
-            onClick={openNewGameDialog} 
-          />
+          <div className="flex gap-2">
+            <Button label="New Game" icon="pi pi-plus" onClick={openNewGameDialog} />
+            <Button
+              label="Delete Selected"
+              icon="pi pi-trash"
+              className="p-button-danger"
+              disabled={selectedGames.length === 0}
+              onClick={deleteSelectedGames}
+            />
+          </div>
         </div>
 
         {gamesError && <p className="error">{gamesError}</p>}
 
-        <DataTable 
-          value={Array.isArray(games) ? games : []} 
+        <DataTable
+          value={Array.isArray(games) ? games : []}
+          selection={selectedGames}
+          onSelectionChange={(e: any) => setSelectedGames(e.value as Game[])}
+          dataKey="_id"
+          selectionMode="multiple"
           responsiveLayout="scroll"
           paginator
           rows={5}
           loading={loading}
           emptyMessage="No games found."
         >
-          <Column field="title" header="Title" sortable style={{ width: '20%' }} />
-          <Column field="status" header="Status" sortable style={{ width: '12%' }} />
-          <Column field="platform" header="Platform" sortable style={{ width: '15%' }} />
+          <Column selectionMode="multiple" headerStyle={{ width: '3rem' }} exportable={false} />
+          <Column field="title" header="Title" sortable style={{ width: '18%' }} />
+          <Column field="status" header="Status" sortable style={{ width: '10%' }} />
+          <Column field="platform" header="Platform" sortable style={{ width: '13%' }} />
           <Column field="estimatedPlayTime" header="Est. (Hrs)" sortable style={{ width: '10%' }} />
           <Column field="actualPlayTime" header="Actual (Hrs)" sortable style={{ width: '10%' }} />
-          <Column field="priority" header="Priority" sortable style={{ width: '10%' }} />
-          <Column body={actionBodyTemplate} style={{ width: '13%' }} />
+          <Column header="Progress" body={progressBodyTemplate} sortable style={{ width: '10%' }} />
+          <Column header="Hours Left" body={hoursLeftBodyTemplate} sortable style={{ width: '10%' }} />
+          <Column field="priority" header="Priority" sortable style={{ width: '8%' }} />
+          <Column body={actionBodyTemplate} style={{ width: '8%' }} />
         </DataTable>
       </div>
 
+      {/* Dialog for create/edit game */}
       <Dialog
         visible={gameDialogVisible}
         style={{ width: '32rem' }}
@@ -463,4 +566,4 @@ export default function Catalog() {
   );
 }
 
-
+export default Catalog;

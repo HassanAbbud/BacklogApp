@@ -1,139 +1,45 @@
-import { useEventListener, useUnmountEffect } from 'primereact/hooks';
-import React, { useContext, useEffect, useRef } from 'react';
-import { classNames } from 'primereact/utils';
-import { useLocation } from 'react-router-dom';
-import AppFooter from './AppFooter';
-import AppSidebar from './AppSidebar';
-import AppTopbar from './AppTopbar';
-import AppConfig from './AppConfig';
-import { LayoutContext } from './context/layoutcontext';
-import { PrimeReactContext } from 'primereact/api';
-import { ChildContainerProps, AppTopbarRef } from '../types';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import './Layout.css';
 
-const Layout = ({ children }: ChildContainerProps) => {
-    const { layoutConfig, layoutState, setLayoutState } = useContext(LayoutContext);
-    const { setRipple } = useContext(PrimeReactContext);
-    const topbarRef = useRef<AppTopbarRef>(null);
-    const sidebarRef = useRef<HTMLDivElement>(null);
-    
-    const [bindMenuOutsideClickListener, unbindMenuOutsideClickListener] = useEventListener({
-        type: 'click',
-        listener: (event: MouseEvent) => {
-            const isOutsideClicked = !(
-                sidebarRef.current?.isSameNode(event.target as Node) ||
-                sidebarRef.current?.contains(event.target as Node) ||
-                topbarRef.current?.menubutton?.isSameNode(event.target as Node) ||
-                topbarRef.current?.menubutton?.contains(event.target as Node)
-            );
+interface LayoutProps {
+  children: React.ReactNode;
+}
 
-            if (isOutsideClicked) {
-                hideMenu();
-            }
-        }
-    });
-
-    const location = useLocation();
-    useEffect(() => {
-        hideMenu();
-        hideProfileMenu();
-    }, [location]);
-
-    const [bindProfileMenuOutsideClickListener, unbindProfileMenuOutsideClickListener] = useEventListener({
-        type: 'click',
-        listener: (event: MouseEvent) => {
-            const isOutsideClicked = !(
-                topbarRef.current?.topbarmenu?.isSameNode(event.target as Node) ||
-                topbarRef.current?.topbarmenu?.contains(event.target as Node) ||
-                topbarRef.current?.topbarmenubutton?.isSameNode(event.target as Node) ||
-                topbarRef.current?.topbarmenubutton?.contains(event.target as Node)
-            );
-
-            if (isOutsideClicked) {
-                hideProfileMenu();
-            }
-        }
-    });
-
-    const hideMenu = () => {
-        setLayoutState((prevLayoutState) => ({
-            ...prevLayoutState,
-            overlayMenuActive: false,
-            staticMenuMobileActive: false,
-            menuHoverActive: false
-        }));
-        unbindMenuOutsideClickListener();
-        unblockBodyScroll();
-    };
-
-    const hideProfileMenu = () => {
-        setLayoutState((prevLayoutState) => ({
-            ...prevLayoutState,
-            profileSidebarVisible: false
-        }));
-        unbindProfileMenuOutsideClickListener();
-    };
-
-    const blockBodyScroll = (): void => {
-        if (document.body.classList) {
-            document.body.classList.add('blocked-scroll');
-        } else {
-            document.body.className += ' blocked-scroll';
-        }
-    };
-
-    const unblockBodyScroll = (): void => {
-        if (document.body.classList) {
-            document.body.classList.remove('blocked-scroll');
-        } else {
-            document.body.className = document.body.className.replace(new RegExp('(^|\\b)' + 'blocked-scroll'.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
-        }
-    };
-
-    useEffect(() => {
-        if (layoutState.overlayMenuActive || layoutState.staticMenuMobileActive) {
-            bindMenuOutsideClickListener();
-        }
-
-        layoutState.staticMenuMobileActive && blockBodyScroll();
-    }, [layoutState.overlayMenuActive, layoutState.staticMenuMobileActive]);
-
-    useEffect(() => {
-        if (layoutState.profileSidebarVisible) {
-            bindProfileMenuOutsideClickListener();
-        }
-    }, [layoutState.profileSidebarVisible]);
-
-    useUnmountEffect(() => {
-        unbindMenuOutsideClickListener();
-        unbindProfileMenuOutsideClickListener();
-    });
-
-    const containerClass = classNames('layout-wrapper', {
-        'layout-overlay': layoutConfig.menuMode === 'overlay',
-        'layout-static': layoutConfig.menuMode === 'static',
-        'layout-static-inactive': layoutState.staticMenuDesktopInactive && layoutConfig.menuMode === 'static',
-        'layout-overlay-active': layoutState.overlayMenuActive,
-        'layout-mobile-active': layoutState.staticMenuMobileActive,
-        'p-input-filled': layoutConfig.inputStyle === 'filled',
-        'p-ripple-disabled': !layoutConfig.ripple
-    });
-
-    return (
-        <React.Fragment>
-            <div className={containerClass}>
-                <AppTopbar ref={topbarRef} />
-                <div ref={sidebarRef} className="layout-sidebar">
-                    <AppSidebar />
-                </div>
-                <div className="layout-main-container">
-                    <div className="layout-main">{children}</div>
-                    <AppFooter />
-                </div>
-                <AppConfig />
-                <div className="layout-mask"></div>
-            </div>
-        </React.Fragment>
-    );
+const Layout: React.FC<LayoutProps> = ({ children }) => {
+  return (
+    <div className="layout-wrapper">
+      <div className="layout-topbar">
+        <div className="layout-topbar-logo">
+          <Link to="/" className="logo-link">
+            <img src="/layout/images/logo-dark.svg" alt="Logo" />
+            <span>Backlog App</span>
+          </Link>
+        </div>
+        <div className="layout-topbar-menu">
+          <Link to="/login" className="topbar-button">Login</Link>
+        </div>
+      </div>
+      <div className="layout-main-container">
+        <div className="layout-sidebar">
+          <ul className="layout-menu">
+            <li>
+              <Link to="/catalog" className="menu-link">Catalog</Link>
+            </li>
+            <li>
+              <Link to="/charts" className="menu-link">Charts</Link>
+            </li>
+          </ul>
+        </div>
+        <div className="layout-main">
+          {children}
+        </div>
+      </div>
+      <div className="layout-footer">
+        <p>© 2025 Backlog App</p>
+      </div>
+    </div>
+  );
 };
 
 export default Layout;
