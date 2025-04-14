@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 import { useNavigate } from 'react-router-dom';
 import React, { useContext, useState, useEffect } from 'react';
@@ -14,7 +13,6 @@ import { useUserStore } from '../stores/userStore';
 import { ProgressSpinner } from 'primereact/progressspinner';
 
 const LoginPage = () => {
-    // Status management
     const [activeIndex, setActiveIndex] = useState(0);
     const [loginEmail, setLoginEmail] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
@@ -146,7 +144,7 @@ const LoginPage = () => {
         <div className={containerClassName}>
             <div className="flex flex-column align-items-center justify-content-center">
                 <img
-                    src={`/layout/images/logo-${layoutConfig.colorScheme === 'light' ? 'dark' : 'white'}.svg`}
+                    src={`/LogoCircle.png`}
                     alt="Logo"
                     className="mb-5 w-6rem flex-shrink-0"
                 />
@@ -158,8 +156,7 @@ const LoginPage = () => {
                     }}
                 >
                     <div className="w-full surface-card py-8 px-5 sm:px-8" style={{ borderRadius: '53px' }}>
-                        <div className="text-center mb-5">
-                            <img src="/demo/images/login/avatar.png" alt="Avatar" height="50" className="mb-3" />
+                        <div className="text-center mb-5">                        
                             <div className="text-900 text-3xl font-medium mb-3">
                                 {activeIndex === 0 ? 'Welcome Back!' : 'Create Account'}
                             </div>
